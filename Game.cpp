@@ -22,7 +22,6 @@ Game::~Game()
 
 void Game::Init( const char *title, int moveX, int moveY, bool fullscreen )
 {
-    isRunning = false;
 
     int flags{ 0 };
     if( fullscreen )
@@ -40,9 +39,8 @@ void Game::Init( const char *title, int moveX, int moveY, bool fullscreen )
         {
             SDL_SetRenderDrawColor( renderer, 0, 255, 0, 255 );
         }
-
-        isRunning = true;
     }
+    isRunning = true;
 
     srand( time( 0 ) );
     rand() % 1;
@@ -75,25 +73,20 @@ void Game::HandleEvents()
             break;
 
         case SDL_KEYDOWN:
+            for( int i{ 0 }; i < KEYS; ++i )
+            {
+                if( event.key.keysym.sym != keyCode[i] ) continue;
+
+                if( !keyLock[i] )
+                {
+                    keyPressed[i] = true;
+                    keyLock[i] = true;
+                }
+                break;
+            }
             if( event.key.keysym.sym == SDLK_ESCAPE )
             {
                 isRunning = false;
-            }
-            else
-            {
-                for( int i{ 0 }; i < KEYS; ++i )
-                {
-                    if( event.key.keysym.sym != keyCode[i] )
-                    {
-                        continue;
-                    }
-                    if( !keyLock[i] )
-                    {
-                        keyPressed[i] = true;
-                        keyLock[i] = true;
-                    }
-                    break;
-                }
             }
             break;
 

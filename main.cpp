@@ -3,17 +3,8 @@
 
 Game *game = nullptr;
 
-int FPS{ 60 };
 int WIDTH{ 1280 };
 int HEIGHT{ 720 };
-
-int LEFT{ 1 };
-int RIGHT{ 2 };
-int DOWN{ 3 };
-
-bool CLOCKWISE{ 1 };
-bool COUNTERCLOCKWISE{ 0 };
-
 
 int main( int argc, char *argv[] )
 {

@@ -1,13 +1,13 @@
 #pragma once
 #include <iostream>
 
-extern int FPS;
 extern int WIDTH;
 extern int HEIGHT;
+static const int FPS{ 60 };
 
-extern int LEFT;
-extern int RIGHT;
-extern int DOWN;
+static const int LEFT{ 1 };
+static const int RIGHT{ 2 };
+static const int DOWN{ 3 };
 
-extern bool CLOCKWISE;
-extern bool COUNTERCLOCKWISE;
+static const bool CLOCKWISE{ 1 };
+static const bool COUNTERCLOCKWISE{ 0 };
