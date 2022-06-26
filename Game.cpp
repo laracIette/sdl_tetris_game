@@ -52,19 +52,11 @@ void Game::Init( const char *title, int moveX, int moveY, bool fullscreen )
 
     pieceStartTime = SDL_GetTicks();
 
-    isLCtrlPressed = false;
-    isLAltPressed  = false;
-    isLeftPressed  = false;
-    isRightPressed = false;
-    isDownPressed  = false;
-    isSpacePressed = false;
-
-    isLCtrlLock    = false;
-    isLAltLock     = false;
-    isLeftLock     = false;
-    isRightLock    = false;
-    isDownLock     = false;
-    isSpaceLock    = false;
+    for( int i{ 0 }; i < KEYS; ++i )
+    {
+        keyPressed[i] = false;
+        keyLock[i] = false;
+    }
 
     isReset = false;
 
@@ -83,94 +75,36 @@ void Game::HandleEvents()
             break;
 
         case SDL_KEYDOWN:
-            switch( event.key.keysym.sym )
+            if( event.key.keysym.sym == SDLK_ESCAPE )
             {
-                case SDLK_ESCAPE:
-                    isRunning = false;
-                    break;
-
-                case SDLK_LCTRL:
-                    if( !isLCtrlLock )
+                isRunning = false;
+            }
+            else
+            {
+                for( int i{ 0 }; i < KEYS; ++i )
+                {
+                    if( event.key.keysym.sym != keyCode[i] )
                     {
-                        isLCtrlLock = true;
-                        isLCtrlPressed = true;
+                        continue;
+                    }
+                    if( !keyLock[i] )
+                    {
+                        keyPressed[i] = true;
+                        keyLock[i] = true;
                     }
                     break;
-
-                case SDLK_LALT:
-                    if( !isLAltLock )
-                    {
-                        isLAltLock = true;
-                        isLAltPressed = true;
-                    }
-                    break;
-
-                case SDLK_LEFT:
-                    if( !isLeftLock )
-                    {
-                        isLeftLock = true;
-                        isLeftPressed = true;
-                    }
-                    break;
-
-                case SDLK_RIGHT:
-                    if( !isRightLock )
-                    {
-                        isRightLock = true;
-                        isRightPressed = true;
-                    }
-                    break;
-
-                case SDLK_DOWN:
-                    if( !isDownLock )
-                    {
-                        isDownLock = true;
-                        isDownPressed = true;
-                    }
-                    break;
-
-                case SDLK_SPACE:
-                    if( !isSpaceLock )
-                    {
-                        isSpaceLock = true;
-                        isSpacePressed = true;
-                    }
-                    break;
-
-                default:
-                    break;
+                }
             }
             break;
 
         case SDL_KEYUP:
-            switch( event.key.keysym.sym )
+            for( int i{ 0 }; i < KEYS; ++i )
             {
-                case SDLK_LCTRL:
-                    isLCtrlLock = false;
+                if( event.key.keysym.sym == keyCode[i] )
+                {
+                    keyLock[i] = false;
                     break;
-
-                case SDLK_LALT:
-                    isLAltLock = false;
-                    break;
-
-                case SDLK_LEFT:
-                    isLeftLock = false;
-                    break;
-
-                case SDLK_RIGHT:
-                    isRightLock = false;
-                    break;
-
-                case SDLK_DOWN:
-                    isDownLock = false;
-                    break;
-
-                case SDLK_SPACE:
-                    isSpaceLock = false;
-                    break;
-
-                default:
-                    break;
+                }
             }
             break;
 
@@ -182,34 +116,34 @@ void Game::HandleEvents()
 
 void Game::Update()
 {
-    if( isLCtrlPressed )
-    {   isLCtrlPressed = false;
+    if( keyPressed[0] )
+    {   keyPressed[0] = false;
 
         map->RotatePiece( COUNTERCLOCKWISE );
         map->ReplaceTiles();
     }
 
-    else if( isLAltPressed )
-    {        isLAltPressed  = false;
+    else if( keyPressed[1] )
+    {        keyPressed[1] = false;
 
         map->RotatePiece( CLOCKWISE );
         map->ReplaceTiles();
     }
 
-    else if( isLeftPressed )
-    {        isLeftPressed  = false;
+    else if( keyPressed[2] )
+    {        keyPressed[2]  = false;
 
         map->MovePiece( LEFT );
     }
 
-    else if( isRightPressed )
-    {        isRightPressed = false;
+    else if( keyPressed[3] )
+    {        keyPressed[3] = false;
 
         map->MovePiece( RIGHT );
     }
 
-    else if( isDownPressed )
-    {        isDownPressed  = false;
+    else if( keyPressed[4] )
+    {        keyPressed[4]  = false;
 
         if( map->MovePiece( DOWN ) )
         {
@@ -217,8 +151,8 @@ void Game::Update()
         }
     }
 
-    else if( isSpacePressed )
-    {        isSpacePressed = false;
+    else if( keyPressed[5] )
+    {        keyPressed[5] = false;
 
         map->MovePieceBottom();
 

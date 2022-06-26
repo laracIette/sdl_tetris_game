@@ -11,19 +11,19 @@ class Game
 
     SDL_Event event;
 
-    bool isLCtrlPressed;
-    bool isLAltPressed;
-    bool isLeftPressed;
-    bool isRightPressed;
-    bool isDownPressed;
-    bool isSpacePressed;
+    static const int KEYS{ 6 };
 
-    bool isLCtrlLock;
-    bool isLAltLock;
-    bool isLeftLock;
-    bool isRightLock;
-    bool isDownLock;
-    bool isSpaceLock;
+    SDL_KeyCode keyCode[KEYS]{
+        SDLK_LCTRL,
+        SDLK_LALT,
+        SDLK_LEFT,
+        SDLK_RIGHT,
+        SDLK_DOWN,
+        SDLK_SPACE
+    };
+
+    bool keyPressed[KEYS];
+    bool keyLock[KEYS];
 
     bool isReset;
 
