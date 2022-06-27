@@ -38,7 +38,7 @@ Map::Map()
     topX = 786 * WIDTH / 1920;
     topY = 191 * HEIGHT / 1080;
 
-    isUpdated = true;
+    t( isUpdated );
 
     offsetX = 2;
     offsetY = 0;
@@ -54,7 +54,7 @@ Map::~Map()
 
 void Map::Update()
 {
-    isUpdated = false;
+    f( isUpdated );
 
     piecePosX.clear();
     piecePosY.clear();
@@ -75,43 +75,48 @@ void Map::Update()
 
 bool Map::MovePiece( int dir )
 {
-    isUpdated = true;
+    t( isUpdated );
 
-    if( dir == LEFT )
+    switch( dir )
     {
-        if( !PieceAtBorder( LEFT ) )
-        {
-            ReplaceTiles();
-            offsetX--;
-        }
-        else
-        {
-            return false;
-        }
-    }
-    else if( dir == RIGHT )
-    {
-        if( !PieceAtBorder( RIGHT ) )
-        {
-            ReplaceTiles();
-            offsetX++;
-        }
-        else
-        {
-            return false;
-        }
-    }
-    else if( dir == DOWN )
-    {
-        if( !PieceAtBorder( DOWN ) )
-        {
-            ReplaceTiles();
-            offsetY++;
-        }
-        else
-        {
-            return false;
-        }
+        case LEFT:
+            if( !PieceAtBorder( LEFT ) )
+            {
+                offsetX--;
+                ReplaceTiles();
+            }
+            else
+            {
+                return false;
+            }
+            break;
+
+        case RIGHT:
+            if( !PieceAtBorder( RIGHT ) )
+            {
+                offsetX++;
+                ReplaceTiles();
+            }
+            else
+            {
+                return false;
+            }
+            break;
+
+        case DOWN:
+            if( !PieceAtBorder( DOWN ) )
+            {
+                offsetY++;
+                ReplaceTiles();
+            }
+            else
+            {
+                return false;
+            }
+            break;
+
+        default:
+            break;
     }
     return true;
 }
@@ -120,8 +125,8 @@ void Map::MovePieceBottom()
 {
     while( !PieceAtBorder( DOWN ) )
     {
-        ReplaceTiles();
         offsetY++;
+        ReplaceTiles();
         Update();
     }
 }
@@ -133,7 +138,7 @@ void Map::RotatePiece( int rot )
 
 void Map::ReplaceTiles()
 {
-    isUpdated = true;
+    t( isUpdated );
 
     for( int i{ 0 }; i < piecePosX.size(); ++i )
     {
@@ -143,55 +148,55 @@ void Map::ReplaceTiles()
 
 bool Map::PieceAtBorder( int bor )
 {
-    if( bor == LEFT )
+    switch( bor )
     {
-        FindPieceLeftBorder();
-        for( int i{ 0 }; i < pieceBordersPos.size(); ++i )
-        {
-            if( tilesMap[pieceBordersPos[i][0]][pieceBordersPos[i][1] - 1] )
+        case LEFT:
+            FindPieceLeftBorder();
+            for( int i{ 0 }; i < pieceBordersPos.size(); ++i )
             {
-                return true;
+                if( tilesMap[pieceBordersPos[i][0]][pieceBordersPos[i][1] - 1] )
+                {
+                    return true;
+                }
             }
-        }
 
-        for( int posX : piecePosX )
-        {
-            if( posX == 0 ) return true;
-        }
-    }
+            return isIn( piecePosX, 0 );
+            break;
 
-    else if( bor == RIGHT )
-    {
-        FindPieceRightBorder();
-        for( int i{ 0 }; i < pieceBordersPos.size(); ++i )
-        {
-            if( tilesMap[pieceBordersPos[i][0]][pieceBordersPos[i][1] + 1] )
+        case RIGHT:
+            FindPieceRightBorder();
+            for( int i{ 0 }; i < pieceBordersPos.size(); ++i )
             {
-                return true;
+                if( tilesMap[pieceBordersPos[i][0]][pieceBordersPos[i][1] + 1] )
+                {
+                    return true;
+                }
             }
-        }
 
-        for( int posX : piecePosX )
-        {
-            if( posX == 9 ) return true;
-        }
-    }
+            return isIn( piecePosX, 9 );
+            break;
 
-    else if( bor == DOWN )
-    {
-        FindPieceDownBorder();
-        for( int i{ 0 }; i < pieceBordersPos.size(); ++i )
-        {
-            if( tilesMap[pieceBordersPos[i][0] + 1][pieceBordersPos[i][1]] )
+        case DOWN:
+            FindPieceDownBorder();
+            for( int i{ 0 }; i < pieceBordersPos.size(); ++i )
             {
-                return true;
-            }
-        }
+                std::cout << tilesMap[pieceBordersPos[i][0] + 1][pieceBordersPos[i][1]]
+                << "Y+1 : " << pieceBordersPos[i][0] + 1
+                << ", Y : " << pieceBordersPos[i][0]
+                << ", X : " << pieceBordersPos[i][1] << '\n';
 
-        for( int posY : piecePosY )
-        {
-            if( posY == 19 ) return true;
-        }
+                if( tilesMap[pieceBordersPos[i][0] + 1][pieceBordersPos[i][1]] )
+                {
+                    std::cout << '\n';
+                    return true;
+                }
+            }
+
+            return isIn( piecePosY, 19 );
+            break;
+
+        default:
+            break;
     }
     return false;
 }
@@ -214,10 +219,7 @@ void Map::FindPieceDownBorder()
         {
             if( !tilesMap[posY][posX] ) continue;
 
-            if( posY > max )
-            {
-                max = posY;
-            }
+            if( posY > max ) max = posY;
         }
         pieceBordersPos.push_back( {max, posX} );
     }
@@ -242,10 +244,7 @@ void Map::FindPieceLeftBorder()
         {
             if( !tilesMap[posY][posX] ) continue;
 
-            if( posX < min )
-            {
-                min = posX;
-            }
+            if( posX < min ) min = posX;
         }
         pieceBordersPos.push_back( {posY, min} );
     }
@@ -270,10 +269,7 @@ void Map::FindPieceRightBorder()
         {
             if( !tilesMap[posY][posX] ) continue;
 
-            if( posX > max )
-            {
-                max = posX;
-            }
+            if( posX > max ) max = posX;
         }
         pieceBordersPos.push_back( {posY, max} );
     }
@@ -294,12 +290,12 @@ void Map::IsLineFull()
 
     for( int row{ 0 }; row < 20; ++row )
     {
-        isRowFull = true;
+        t( isRowFull );
         for( int column{ 0 }; column < 10; ++column )
         {
             if( !tilesMap[row][column] )
             {
-                isRowFull = false;
+                f( isRowFull );
                 break;
             }
         }

@@ -14,8 +14,8 @@ class Game
     static const int KEYS{ 6 };
 
     SDL_KeyCode keyCode[KEYS]{
-        SDLK_LCTRL,
-        SDLK_LALT,
+        SDLK_x,
+        SDLK_v,
         SDLK_LEFT,
         SDLK_RIGHT,
         SDLK_DOWN,
@@ -26,6 +26,7 @@ class Game
     bool keyLock[KEYS];
 
     bool isReset;
+    bool isPaused;
 
 public:
     Game();

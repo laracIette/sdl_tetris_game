@@ -40,7 +40,7 @@ void Game::Init( const char *title, int moveX, int moveY, bool fullscreen )
             SDL_SetRenderDrawColor( renderer, 0, 255, 0, 255 );
         }
     }
-    isRunning = true;
+    t( isRunning );
 
     srand( time( 0 ) );
     rand() % 1;
@@ -48,15 +48,21 @@ void Game::Init( const char *title, int moveX, int moveY, bool fullscreen )
 
     map = new Map();
 
-    pieceStartTime = SDL_GetTicks();
+    getTime( pieceStartTime );
 
     for( int i{ 0 }; i < KEYS; ++i )
     {
-        keyPressed[i] = false;
-        keyLock[i] = false;
+        f( keyPressed[i] );
+        f( keyLock[i] );
     }
 
-    isReset = false;
+    f( isReset );
+    f( isPaused );
+
+    //std::vector<int> array{1, 2, 3, 6, 5};
+    //std::cout << maximum( array );
+    //std::cout << minimum( array, 2 );
+    //std::cout << minimum( array, 0 );
 
 }
 
@@ -69,7 +75,7 @@ void Game::HandleEvents()
     switch( event.type )
     {
         case SDL_QUIT:
-            isRunning = false;
+            f( isRunning );
             break;
 
         case SDL_KEYDOWN:
@@ -79,14 +85,14 @@ void Game::HandleEvents()
 
                 if( !keyLock[i] )
                 {
-                    keyPressed[i] = true;
-                    keyLock[i] = true;
+                    t( keyPressed[i] );
+                    t( keyLock[i] );
                 }
                 break;
             }
             if( event.key.keysym.sym == SDLK_ESCAPE )
             {
-                isRunning = false;
+                t( isPaused );
             }
             break;
 
@@ -95,7 +101,7 @@ void Game::HandleEvents()
             {
                 if( event.key.keysym.sym == keyCode[i] )
                 {
-                    keyLock[i] = false;
+                    f( keyLock[i] );
                     break;
                 }
             }
@@ -109,34 +115,49 @@ void Game::HandleEvents()
 
 void Game::Update()
 {
+    while( isPaused )
+    {
+        SDL_PollEvent( &event );
+
+        if( event.type == SDL_KEYDOWN )
+        {
+            if( event.key.keysym.sym == SDLK_LSHIFT )
+            {
+                f( isPaused );
+                getTime( pieceStartTime );
+                break;
+            }
+        }
+    }
+
     if( keyPressed[0] )
-    {   keyPressed[0] = false;
+    {f( keyPressed[0] );
 
         map->RotatePiece( COUNTERCLOCKWISE );
         map->ReplaceTiles();
     }
 
     else if( keyPressed[1] )
-    {        keyPressed[1] = false;
+    {     f( keyPressed[1] );
 
         map->RotatePiece( CLOCKWISE );
         map->ReplaceTiles();
     }
 
     else if( keyPressed[2] )
-    {        keyPressed[2]  = false;
+    {     f( keyPressed[2] );
 
         map->MovePiece( LEFT );
     }
 
     else if( keyPressed[3] )
-    {        keyPressed[3] = false;
+    {     f( keyPressed[3] );
 
         map->MovePiece( RIGHT );
     }
 
     else if( keyPressed[4] )
-    {        keyPressed[4]  = false;
+    {     f( keyPressed[4] );
 
         if( map->MovePiece( DOWN ) )
         {
@@ -145,29 +166,29 @@ void Game::Update()
     }
 
     else if( keyPressed[5] )
-    {        keyPressed[5] = false;
+    {     f( keyPressed[5] );
 
         map->MovePieceBottom();
 
-        isReset = true;
+        t( isReset );
     }
 
 
-    if( (SDL_GetTicks() - pieceStartTime) > 1000 )
+    if( (getTime() - pieceStartTime) > 1000 )
     {
-        pieceStartTime = SDL_GetTicks();
+        getTime( pieceStartTime );
 
         if( !map->MovePiece( DOWN ) )
         {
-            isReset = true;
+            t( isReset );
         }
     }
 
     if( isReset )
     {
-        isReset = false;
+        f( isReset );
         Reset();
-        map->isUpdated = true;
+        t( map->isUpdated );
     }
 
     if( map->isUpdated )
@@ -176,7 +197,7 @@ void Game::Update()
         map->Update();
         //if( map->PieceAtTop() )
         //    std::cout << "Piece at top!";
-        //    isRunning = false;
+        //    f( isRunning );
     }
 }
 
@@ -191,7 +212,7 @@ void Game::Render()
 
 void Game::Reset()
 {
-    pieceStartTime = SDL_GetTicks();
+    getTime( pieceStartTime );
     map->Reset();
 }
 
