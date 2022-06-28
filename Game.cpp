@@ -2,6 +2,7 @@
 #include "Map.h"
 #include "Global.h"
 #include "Piece.h"
+#include "Score.h"
 
 #include <stdlib.h>
 #include <time.h>
@@ -10,6 +11,7 @@
 
 
 Map *map;
+Score *score;
 
 SDL_Renderer *Game::renderer = nullptr;
 
@@ -47,6 +49,8 @@ void Game::Init( const char *title, int moveX, int moveY, bool fullscreen )
 
 
     map = new Map();
+    score = new Score();
+    score->Init();
 
     getTime( pieceStartTime );
 
@@ -58,11 +62,6 @@ void Game::Init( const char *title, int moveX, int moveY, bool fullscreen )
 
     f( isReset );
     f( isPaused );
-
-    //std::vector<int> array{1, 2, 3, 6, 5};
-    //std::cout << maximum( array );
-    //std::cout << minimum( array, 2 );
-    //std::cout << minimum( array, 0 );
 
 }
 
@@ -119,14 +118,16 @@ void Game::Update()
     {
         SDL_PollEvent( &event );
 
-        if( event.type == SDL_KEYDOWN )
+        if( event.type != SDL_KEYDOWN )
         {
-            if( event.key.keysym.sym == SDLK_LSHIFT )
-            {
-                f( isPaused );
-                getTime( pieceStartTime );
-                break;
-            }
+            continue;
+        }
+
+        if( event.key.keysym.sym == SDLK_LSHIFT )
+        {
+            f( isPaused );
+            getTime( pieceStartTime );
+            break;
         }
     }
 
@@ -193,7 +194,7 @@ void Game::Update()
 
     if( map->isUpdated )
     {
-        map->IsLineFull();
+        score->Add( map->IsLineFull() );
         map->Update();
         //if( map->PieceAtTop() )
         //    std::cout << "Piece at top!";
@@ -206,6 +207,7 @@ void Game::Render()
     SDL_RenderClear( renderer );
 
     map->DrawMap();
+    score->DrawScore();
 
     SDL_RenderPresent( renderer );
 }

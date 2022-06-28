@@ -52,10 +52,10 @@ void Piece::Init( int num, int clr  )
             break;
 
         case 4:
+            pieceMap[0][1] = color;
             pieceMap[0][2] = color;
-            pieceMap[0][3] = color;
+            pieceMap[1][0] = color;
             pieceMap[1][1] = color;
-            pieceMap[1][2] = color;
             break;
 
         case 5:
@@ -63,6 +63,13 @@ void Piece::Init( int num, int clr  )
             pieceMap[1][2] = color;
             pieceMap[2][1] = color;
             pieceMap[2][2] = color;
+            break;
+
+        case 6:
+            pieceMap[0][1] = color;
+            pieceMap[0][2] = color;
+            pieceMap[1][2] = color;
+            pieceMap[1][3] = color;
             break;
 
         default:
@@ -116,10 +123,10 @@ void Piece::Rotate( bool rot )
                     break;
 
                 case 4:
+                    pieceMap[0][1] = color;
                     pieceMap[0][2] = color;
-                    pieceMap[0][3] = color;
+                    pieceMap[1][0] = color;
                     pieceMap[1][1] = color;
-                    pieceMap[1][2] = color;
                     break;
 
                 case 5:
@@ -127,6 +134,13 @@ void Piece::Rotate( bool rot )
                     pieceMap[1][2] = color;
                     pieceMap[2][1] = color;
                     pieceMap[2][2] = color;
+                    break;
+
+                case 6:
+                    pieceMap[0][1] = color;
+                    pieceMap[0][2] = color;
+                    pieceMap[1][2] = color;
+                    pieceMap[1][3] = color;
                     break;
 
                 default:
@@ -180,6 +194,13 @@ void Piece::Rotate( bool rot )
                     pieceMap[1][3] = color;
                     break;
 
+                case 6:
+                    pieceMap[0][2] = color;
+                    pieceMap[1][1] = color;
+                    pieceMap[1][2] = color;
+                    pieceMap[2][1] = color;
+                    break;
+
                 default:
                     break;
             }
@@ -217,10 +238,10 @@ void Piece::Rotate( bool rot )
                     break;
 
                 case 4:
+                    pieceMap[0][1] = color;
                     pieceMap[0][2] = color;
-                    pieceMap[0][3] = color;
+                    pieceMap[1][0] = color;
                     pieceMap[1][1] = color;
-                    pieceMap[1][2] = color;
                     break;
 
                 case 5:
@@ -228,6 +249,13 @@ void Piece::Rotate( bool rot )
                     pieceMap[0][3] = color;
                     pieceMap[1][2] = color;
                     pieceMap[2][2] = color;
+                    break;
+
+                case 6:
+                    pieceMap[0][1] = color;
+                    pieceMap[0][2] = color;
+                    pieceMap[1][2] = color;
+                    pieceMap[1][3] = color;
                     break;
 
                 default:
@@ -278,6 +306,13 @@ void Piece::Rotate( bool rot )
                     pieceMap[1][2] = color;
                     pieceMap[1][3] = color;
                     pieceMap[2][3] = color;
+                    break;
+
+                case 6:
+                    pieceMap[0][2] = color;
+                    pieceMap[1][1] = color;
+                    pieceMap[1][2] = color;
+                    pieceMap[2][1] = color;
                     break;
 
                 default:

@@ -57,6 +57,13 @@ static bool isIn( std::vector<T> vec, T num )
 
 
 
+template <typename T>
+int len( T arr )
+{
+    return (sizeof( arr ) / sizeof( arr[0] ));
+}
+
+
 
 static void t( bool &b ) // = true
 {

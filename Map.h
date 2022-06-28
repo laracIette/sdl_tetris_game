@@ -25,6 +25,8 @@ class Map
     std::vector<int> piecePosY;
     std::vector<std::array<int, 2> > pieceBordersPos;
 
+    int lineFullBonus;
+
 
 public:
     Map();
@@ -46,7 +48,7 @@ public:
 
     //bool PieceAtTop();
 
-    void IsLineFull();
+    int IsLineFull();
 
     void Reset();
 

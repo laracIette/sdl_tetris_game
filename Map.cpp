@@ -44,7 +44,7 @@ Map::Map()
     offsetY = 0;
 
     piece = new Piece();
-    piece->Init( rand() % 6, (rand() % 5) + 1 );
+    piece->Init( rand() % 7, (rand() % 6) + 1 );
 
 }
 
@@ -284,8 +284,10 @@ void Map::FindPieceRightBorder()
 //    return false;
 //}
 
-void Map::IsLineFull()
+int Map::IsLineFull()
 {
+    lineFullBonus = 0;
+
     bool isRowFull;
 
     for( int row{ 0 }; row < 20; ++row )
@@ -305,6 +307,8 @@ void Map::IsLineFull()
             continue;
         }
 
+        lineFullBonus += 10;
+
         for( int rowInf{ row - 1 }; rowInf > 1; --rowInf )
         {
             for( int column{ 0 }; column < 10; ++column )
@@ -313,6 +317,8 @@ void Map::IsLineFull()
             }
         }
     }
+
+    return lineFullBonus;
 }
 
 void Map::Reset()
@@ -322,7 +328,8 @@ void Map::Reset()
     piecePosX.clear();
     piecePosY.clear();
 
-    piece->Init( rand() % 6, (rand() % 5) + 1 );
+    piece->Init( rand() % 7, (rand() % 6) + 1 );
+
 }
 
 void Map::DrawMap()
