@@ -174,8 +174,15 @@ void Game::Update()
     {     f( keyPressed[5] );
 
         map->MovePieceBottom();
+        score->Add( 1 );
 
         t( isReset );
+    }
+
+    else if( keyPressed[6] )
+    {     f( keyPressed[6] );
+
+        if( !map->HoldPiece() ) t( isReset );
     }
 
 
@@ -185,6 +192,7 @@ void Game::Update()
 
         if( !map->MovePiece( DOWN ) )
         {
+            score->Add( 1 );
             t( isReset );
         }
     }
@@ -192,7 +200,6 @@ void Game::Update()
     if( isReset )
     {
         f( isReset );
-        score->Add( 1 );
         Reset();
         t( map->isUpdated );
     }

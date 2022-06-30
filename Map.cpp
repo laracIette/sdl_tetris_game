@@ -2,6 +2,10 @@
 #include "TextureManager.h"
 #include "Global.h"
 
+
+#define FOR_Y_FOR_X_begin for( int Y{ 0 }; Y < 4; ++Y ) { for( int X{ 0 }; X < 4; ++X ) {
+#define FOR_Y_FOR_X_end } }
+
 Piece *piece;
 
 Map::Map()
@@ -38,6 +42,14 @@ Map::Map()
     topX = 786 * WIDTH / 1920;
     topY = 191 * HEIGHT / 1080;
 
+    holdTileDest.x = 0;
+    holdTileDest.y = 0;
+    holdTileDest.w = 25 * WIDTH / 1920;
+    holdTileDest.h = 25 * HEIGHT / 1080;
+
+    holdTopX = 640 * WIDTH / 1920;
+    holdTopY = 223 * HEIGHT / 1080;
+
     t( isUpdated );
 
     offsetX = 2;
@@ -59,18 +71,14 @@ void Map::Update()
     piecePosX.clear();
     piecePosY.clear();
 
-    for( int X{ 0 }; X < 4; ++X )
-    {
-        for( int Y{ 0 }; Y < 4; ++Y )
+    FOR_Y_FOR_X_begin
+        if( piece->pieceMap[Y][X] )
         {
-            if( piece->pieceMap[Y][X] )
-            {
-                tilesMap[Y+offsetY][X+offsetX] = piece->pieceMap[Y][X];
-                piecePosX.push_back( X+offsetX );
-                piecePosY.push_back( Y+offsetY );
-            }
+            tilesMap[Y+offsetY][X+offsetX] = piece->pieceMap[Y][X];
+            piecePosX.push_back( X+offsetX );
+            piecePosY.push_back( Y+offsetY );
         }
-    }
+    FOR_Y_FOR_X_end
 }
 
 bool Map::MovePiece( int dir )
@@ -275,6 +283,56 @@ void Map::FindPieceRightBorder()
     }
 }
 
+bool Map::HoldPiece()
+{
+    bool isHolded{ false };
+
+    FOR_Y_FOR_X_begin
+        if( holdedPieceMap[Y][X] )
+        {
+            isHolded = true;
+            break;
+        }
+    FOR_Y_FOR_X_end
+
+    if( isHolded )
+    {
+        FOR_Y_FOR_X_begin
+            temp[Y][X] = 0;
+            if( holdedPieceMap[Y][X] ) temp[Y][X] = holdedPieceMap[Y][X];
+        FOR_Y_FOR_X_end
+
+        tempNumber = piece->GetNumber();
+    }
+
+
+    FOR_Y_FOR_X_begin
+        if( holdedPieceMap[Y][X] ) holdedPieceMap[Y][X] = 0;
+
+        if( piece->pieceMap[Y][X] )
+        {
+            holdedPieceMap[Y][X] = piece->pieceMap[Y][X];
+        }
+    FOR_Y_FOR_X_end
+
+    ReplaceTiles();
+
+    if( isHolded )
+    {
+        FOR_Y_FOR_X_begin
+            if( piece->pieceMap[Y][X] ) piece->pieceMap[Y][X] = 0;
+
+            if( temp[Y][X] )
+            {
+                piece->pieceMap[Y][X] = temp[Y][X];
+            }
+        FOR_Y_FOR_X_end
+        piece->SetNumber( tempNumber );
+    }
+
+    return isHolded;
+}
+
 //bool Map::PieceAtTop()
 //{
 //    if( tilesMap[0][5] || tilesMap[0][6] )
@@ -307,7 +365,7 @@ int Map::IsLineFull()
             continue;
         }
 
-        lineFullBonus += 10;
+        lineFullBonus += 10 + lineFullBonus/10;
 
         for( int rowInf{ row - 1 }; rowInf > 1; --rowInf )
         {
@@ -349,5 +407,14 @@ void Map::DrawMap()
             }
         }
     }
+
+    FOR_Y_FOR_X_begin
+        if( holdedPieceMap[Y][X] )
+        {
+            holdTileDest.x = X * holdTileDest.w + holdTopX;
+            holdTileDest.y = Y * holdTileDest.h + holdTopY;
+            TextureManager::DrawTexture( colors[holdedPieceMap[Y][X]], tileSrc, holdTileDest );
+        }
+    FOR_Y_FOR_X_end
 
 }

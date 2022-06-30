@@ -11,7 +11,7 @@ class Game
 
     SDL_Event event;
 
-    static const int KEYS{ 6 };
+    static const int KEYS{ 7 };
 
     SDL_KeyCode keyCode[KEYS]{
         SDLK_x,
@@ -19,7 +19,8 @@ class Game
         SDLK_LEFT,
         SDLK_RIGHT,
         SDLK_DOWN,
-        SDLK_SPACE
+        SDLK_SPACE,
+        SDLK_h
     };
 
     bool keyPressed[KEYS];

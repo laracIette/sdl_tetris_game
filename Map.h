@@ -11,10 +11,13 @@ class Map
     SDL_Texture *colors[7];
 
     SDL_Rect src, dest;
-    SDL_Rect tileSrc, tileDest;
+    SDL_Rect tileSrc, tileDest, holdTileDest;
 
     int topX;
     int topY;
+
+    int holdTopX;
+    int holdTopY;
 
     int tilesMap[20][10];
 
@@ -27,6 +30,11 @@ class Map
 
     int lineFullBonus;
 
+    int holdedPieceMap[4][4];
+    int temp[4][4];
+
+    int holdedNumber;
+    int tempNumber;
 
 public:
     Map();
@@ -37,7 +45,7 @@ public:
     bool MovePiece( int dir );
     void MovePieceBottom();
 
-    void RotatePiece( int rot  );
+    void RotatePiece( int rot );
 
     void ReplaceTiles();
 
@@ -47,6 +55,8 @@ public:
     void FindPieceRightBorder();
 
     //bool PieceAtTop();
+
+    bool HoldPiece();
 
     int IsLineFull();
 
