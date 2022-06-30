@@ -12,18 +12,19 @@ class Score
 
     SDL_Rect src, dest;
     int originX;
+    int originY;
     int posX;
 
 public:
     Score();
     ~Score();
 
-    void Init();
+    void Init( int scr = 0 );
 
     void Add( int scr ) { score += scr; }
 
     int GetScore() { return score; }
     int SetScore( int scr ) { score = scr; }
 
-    void DrawScore();
+    void DrawScore( int y = 0 );
 };

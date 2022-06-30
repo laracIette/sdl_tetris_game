@@ -3,6 +3,7 @@
 #include "Global.h"
 #include "Piece.h"
 #include "Score.h"
+#include "Highscore.h"
 
 #include <stdlib.h>
 #include <time.h>
@@ -12,6 +13,7 @@
 
 Map *map;
 Score *score;
+Highscore *highscore;
 
 SDL_Renderer *Game::renderer = nullptr;
 
@@ -51,6 +53,8 @@ void Game::Init( const char *title, int moveX, int moveY, bool fullscreen )
     map = new Map();
     score = new Score();
     score->Init();
+
+    highscore = new Highscore();
 
     getTime( pieceStartTime );
 
@@ -188,6 +192,7 @@ void Game::Update()
     if( isReset )
     {
         f( isReset );
+        score->Add( 1 );
         Reset();
         t( map->isUpdated );
     }
@@ -195,6 +200,10 @@ void Game::Update()
     if( map->isUpdated )
     {
         score->Add( map->IsLineFull() );
+        if( score->GetScore() > highscore->GetHighscore() )
+        {
+            highscore->SetHighscore( score->GetScore() );
+        }
         map->Update();
         //if( map->PieceAtTop() )
         //    std::cout << "Piece at top!";
@@ -208,6 +217,7 @@ void Game::Render()
 
     map->DrawMap();
     score->DrawScore();
+    highscore->DrawHighscore();
 
     SDL_RenderPresent( renderer );
 }

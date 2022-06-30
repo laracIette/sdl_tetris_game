@@ -23,18 +23,19 @@ Score::Score()
     dest.y = 905 * HEIGHT/1080;
 
     originX = dest.x;
+    originY = dest.y;
 
 }
 Score::~Score()
 {
 }
 
-void Score::Init()
+void Score::Init( int scr )
 {
-    score = 0;
+    score = scr;
 }
 
-void Score::DrawScore()
+void Score::DrawScore( int y )
 {
     str = std::to_string( score );
 
@@ -46,6 +47,7 @@ void Score::DrawScore()
     for( char letter : str )
     {
         dest.x = originX + dest.w/1.3 * posX++;
+        dest.y = originY + dest.h * y;
         TextureManager::DrawTexture( numbers[letter - '0'], src, dest );
     }
 }
